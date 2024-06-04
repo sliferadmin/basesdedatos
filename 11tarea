@@ -1,0 +1,99 @@
+swagger: '2.0'
+info:
+  title: API de agencia de viajes MoonTravels.
+  description: Esta API se encarga de manejar la información de la empresa MoonTravels.
+  version: 1.0.0
+servers:
+- url: https://api.alumnospedro/v1/empleados/
+tags:
+- name: clientes
+  description: Maneja la información de los clientes de MoonTravels
+
+paths:
+
+  /empleado:
+    post:
+      tags:
+      - clientes
+      summary: Consulta información de un empleado basado en Edad y Sueldo
+      parameters:
+      - $ref: '#/components/parameters/token'
+  
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsultaEmpleado'
+        required: true
+      responses:
+        200:
+          description: (OK) La información del empleado se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExitoEmpleado'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  
+components:
+  responses:
+    
+    Unauthorized:
+      description: (Unauthorized) No hay autorización para llamar al servicio
+    
+    NotFound:
+      description: (NotFound) No se encontró información 
+    
+    BadRequest:
+      description: (Bad Request) Los datos enviados son incorrectos o hay datos obligatorios no enviados
+      
+    ServerError:
+      description: Error en servidor
+        
+
+  parameters:
+    token:
+      in: header
+      name: token
+      description: Token de autenticación en API.
+      required: true
+      schema:
+        type: string
+    
+
+  schemas:
+
+    ConsultaEmpleado:
+      type: object
+      properties:
+        edad:
+          type: integer
+          description: Edad del empleado
+        sueldo:
+          type: number
+          format: float
+          description: Sueldo del empleado
+  
+    ExitoEmpleado:
+      type: object
+      properties:
+        respuesta:
+          type: integer
+          enum: [1]
+          description: Bandera que nos dice si la llamada al servicio fue satisfactoria
+        idEmpleado: 
+          type: integer
+          description: ID del empleado
+        nombre:
+          type: string
+          description: Nombre completo del empleado
+        titulo:
+          type: string
+          description: Título del empleado
+
